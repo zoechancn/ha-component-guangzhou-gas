@@ -20,6 +20,20 @@
 
 ---
 
+## [1.1.6] - 2026-05-27
+
+### Fixed
+- 🐛 **修复 `entity.py` 第9行 DeviceInfo 导入错误**
+  - ❌ v1.1.5 在 Home Assistant 2024.x+ 中导入失败
+  - ✅ 使用 try/except 兼容新旧版本：
+    - 新版本：`from homeassistant.helpers.device_registry import DeviceInfo`
+    - 旧版本：`from homeassistant.helpers.typing import DeviceInfo`
+  - ✅ 错误信息：`No module named 'homeassistant.helpers.typing'.DeviceInfo`
+  - ✅ 代码审查通过：所有文件语法检查通过
+  - ✅ 版本号一致性检查通过
+
+---
+
 ## [1.1.5] - 2026-05-27
 
 ### Fixed
