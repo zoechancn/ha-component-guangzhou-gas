@@ -122,16 +122,29 @@ class GuangzhouGasAPI:
         try:
             response = await self._async_request_form(API_USER_INFO_URL, data, headers)
             
-            # 根据 Node-RED：let userInfo = res.data.wtVo;
-            # wtVo 是数组，取第一个元素
+            # 根据真实 API 响应：
+            # - data.wtVo 是对象（dict），不是数组（list）
+            # - 但有些情况下可能是数组，所以需要兼容处理
             data = response.get("data", {})
-            wt_vo = data.get("wtVo", [])
+            wt_vo = data.get("wtVo", {})
             
-            if not wt_vo or not isinstance(wt_vo, list) or len(wt_vo) == 0:
+            if not wt_vo:
                 _LOGGER.error("wtVo not found or empty in response: %s", response)
                 raise GuangzhouGasDataError("wtVo not found in user info response")
             
-            user_info = wt_vo[0]  # 第一个用户的信息
+            # 兼容处理：wtVo 可能是 dict 或 list
+            if isinstance(wt_vo, list):
+                if len(wt_vo) == 0:
+                    raise GuangzhouGasDataError("wtVo array is empty")
+                user_info = wt_vo[0]  # 数组情况：取第一个元素
+                _LOGGER.debug("wtVo is list, using first element")
+            elif isinstance(wt_vo, dict):
+                user_info = wt_vo  # 对象情况：直接使用
+                _LOGGER.debug("wtVo is dict, using directly")
+            else:
+                _LOGGER.error("wtVo has unexpected type: %s", type(wt_vo))
+                raise GuangzhouGasDataError(f"wtVo has unexpected type: {type(wt_vo)}")
+            
             _LOGGER.debug("User info received: %s", user_info)
             return user_info
             
@@ -168,16 +181,29 @@ class GuangzhouGasAPI:
         try:
             response = await self._async_request_form(API_GAS_DETAIL_URL, data, headers)
             
-            # 根据 Node-RED：let biao = data.rqbList && data.rqbList.length > 0 ? data.rqbList[0] : {};
-            # rqbList 是数组，取第一个元素
+            # 根据真实 API 响应：
+            # - data.rqbList 可能是对象（dict）或数组（list）
+            # - 需要兼容处理
             data = response.get("data", {})
-            rqb_list = data.get("rqbList", [])
+            rqb_list = data.get("rqbList", {})
             
-            if not rqb_list or not isinstance(rqb_list, list) or len(rqb_list) == 0:
+            if not rqb_list:
                 _LOGGER.error("rqbList not found or empty in response: %s", response)
                 raise GuangzhouGasDataError("rqbList not found in gas detail response")
             
-            gas_detail = rqb_list[0]  # 第一个燃气表的信息
+            # 兼容处理：rqbList 可能是 dict 或 list
+            if isinstance(rqb_list, list):
+                if len(rqb_list) == 0:
+                    raise GuangzhouGasDataError("rqbList array is empty")
+                gas_detail = rqb_list[0]  # 数组情况：取第一个元素
+                _LOGGER.debug("rqbList is list, using first element")
+            elif isinstance(rqb_list, dict):
+                gas_detail = rqb_list  # 对象情况：直接使用
+                _LOGGER.debug("rqbList is dict, using directly")
+            else:
+                _LOGGER.error("rqbList has unexpected type: %s", type(rqb_list))
+                raise GuangzhouGasDataError(f"rqbList has unexpected type: {type(rqb_list)}")
+            
             _LOGGER.debug("Gas detail received: %s", gas_detail)
             return gas_detail
             

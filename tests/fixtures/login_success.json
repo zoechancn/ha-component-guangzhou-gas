@@ -1,7 +1,5 @@
 {
   "code": 200,
   "msg": " success ",
-  "data": {
-    "token": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxMjM0NTY3ODkwIiwic3ViIjoiVF0111111111111IiwidHlwZSI6ImFjY2VzcyIsImlzcyI6ImF1dGgwIiwiYXVkIjoiYWxsIiwiaWF0IjoxNzA1NDAwMDAwLCJleHAiOjE3MDU0ODAwMDB9.abc123"
-  }
+  "data": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxMjM0NTY3ODkwIiwic3ViIjoiVF0111111111111IiwidHlwZSI6ImFjY2VzcyIsImlzcyI6ImF1dGgwIiwiYXVkIjoiYWxsIiwiaWF0IjoxNzA1NDAwMDAwLCJleHAiOjE3MDU0ODAwMDB9.abc123"
 }

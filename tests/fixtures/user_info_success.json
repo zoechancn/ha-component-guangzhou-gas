@@ -2,21 +2,28 @@
   "code": 200,
   "msg": " success ",
   "data": {
-    "userName": "张三",
-    "userNo": "711111111",
-    "userAddress": "广州市天河区测试路1号",
-    "money": "100.50",
-    "bm": "BM11111111",
-    "blx": "IC卡表",
-    "rqbztdes": "正常",
-    "jieti_interval": "2024-01-01 至 2024-12-31",
-    "jieti_amount_benci": "120",
-    "lastRecordWatchNum": "1000",
-    "lastRecordWatchDate": "2024-01-15",
-    "zhczje": "200",
-    "zhczsj": "20240520143000",
-    "ljczye": "500",
-    "feeWay": "银行代扣",
-    "safeInspectHas": "已安检"
-  }
+    "wtVo": {
+      "userName": "陈***",
+      "userNo": "3176411713",
+      "userAddress": "广州市*****街臻荟华庭汽车城大道53号（自编5栋）702",
+      "bm": "3303552426050443",
+      "blx": "物联网表",
+      "dqye": "113.6",
+      "feeWay": "银联直连批扣",
+      "jietiTimeBenci": "2025-06-12",
+      "jieti_amount_benci": "112",
+      "jieti_interval": "2025-06-12至2026-06-12",
+      "lastRecordWatchDate": "2026-05-01",
+      "lastRecordWatchNum": "112",
+      "safeInspectDate": "2025-06-13 00:00:00",
+      "safeInspectHas": "没隐患",
+      "rqbztdes": "使用",
+      "yqdzztDes": "使用"
+    },
+    "yuyueVo": null
+  },
+  "errcode": 0,
+  "errdetail": "",
+  "errmsg": "请求成功",
+  "error": false
 }

@@ -20,6 +20,20 @@
 
 ---
 
+## [1.1.4] - 2026-05-27
+
+### Fixed
+- 🐛 **修复用户信息解析（根据真实 API 测试）**
+  - ❌ 之前版本（v1.1.3）假设 `wtVo` 是数组（list）
+  - ✅ 真实 API 返回 `wtVo` 是对象（dict）
+  - ✅ 修复 `api.py`: `async_get_user_info()` 现在兼容处理 dict 和 list 两种情况
+  - ✅ 修复 `api.py`: `async_get_gas_detail()` 现在兼容处理 dict 和 list 两种情况（提高健壮性）
+  - ✅ 更新测试夹具（fixtures）以匹配真实 API 响应格式
+  - ✅ 更新 `config_flow.py` 注释，更准确描述代码行为
+  - ✅ 使用用户提供的认证信息直接测试真实 API，确保代码正确性
+
+---
+
 ## [1.1.3] - 2026-05-27
 
 ### Fixed

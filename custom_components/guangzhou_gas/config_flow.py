@@ -144,7 +144,8 @@ class GuangzhouGasConfigFlow(ConfigFlow, domain=DOMAIN):
             _LOGGER.info("Login successful")
             
             # 测试获取用户信息
-            # api.py 的 async_get_user_info() 现在直接返回 wtVo[0]（字典）
+            # api.py 的 async_get_user_info() 现在兼容 wtVo 为 dict 或 list 的情况
+            # 真实 API 返回 wtVo 为 dict，但代码也支持 list
             user_info = await api.async_get_user_info(token)
             user_name = user_info.get("userName")
             
