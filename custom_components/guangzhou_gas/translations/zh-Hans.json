@@ -74,6 +74,30 @@
       "last_recharge_time": {
         "name": "最近充值时间",
         "state": "最近充值时间"
+      },
+      "user_name": {
+        "name": "用户名",
+        "state": "用户名"
+      },
+      "user_no": {
+        "name": "用户号",
+        "state": "用户号"
+      },
+      "address": {
+        "name": "地址",
+        "state": "地址"
+      },
+      "meter_no": {
+        "name": "表号",
+        "state": "表号"
+      },
+      "meter_type": {
+        "name": "表类型",
+        "state": "表类型"
+      },
+      "last_watch_date": {
+        "name": "上次抄表日期",
+        "state": "上次抄表日期"
       }
     }
   }

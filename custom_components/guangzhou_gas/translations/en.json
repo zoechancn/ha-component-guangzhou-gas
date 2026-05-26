@@ -74,6 +74,30 @@
       "last_recharge_time": {
         "name": "Last Recharge Time",
         "state": "Last Recharge Time"
+      },
+      "user_name": {
+        "name": "User Name",
+        "state": "User Name"
+      },
+      "user_no": {
+        "name": "User No",
+        "state": "User No"
+      },
+      "address": {
+        "name": "Address",
+        "state": "Address"
+      },
+      "meter_no": {
+        "name": "Meter No",
+        "state": "Meter No"
+      },
+      "meter_type": {
+        "name": "Meter Type",
+        "state": "Meter Type"
+      },
+      "last_watch_date": {
+        "name": "Last Watch Date",
+        "state": "Last Watch Date"
       }
     }
   }

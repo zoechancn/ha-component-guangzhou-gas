@@ -41,7 +41,7 @@ async def async_setup_entry(
     
     coordinator = hass.data[DOMAIN][entry.entry_id]
     
-    # 创建 10 个传感器实体
+    # 创建 16 个传感器实体
     entities = [
         GuangzhouGasBalanceSensor(coordinator, entry),
         GuangzhouGasGasUsageSensor(coordinator, entry),
@@ -53,6 +53,13 @@ async def async_setup_entry(
         GuangzhouGasAutoPaymentSensor(coordinator, entry),
         GuangzhouGasSafetyInspectionSensor(coordinator, entry),
         GuangzhouGasLastRechargeTimeSensor(coordinator, entry),
+        # 新增 6 个传感器
+        GuangzhouGasUserNameSensor(coordinator, entry),
+        GuangzhouGasUserNoSensor(coordinator, entry),
+        GuangzhouGasAddressSensor(coordinator, entry),
+        GuangzhouGasMeterNoSensor(coordinator, entry),
+        GuangzhouGasMeterTypeSensor(coordinator, entry),
+        GuangzhouGasLastWatchDateSensor(coordinator, entry),
     ]
     
     async_add_entities(entities)
@@ -414,4 +421,160 @@ class GuangzhouGasLastRechargeTimeSensor(GuangzhouGasEntity, SensorEntity):
             "充值金额": self.coordinator.data.get("zhczje"),
             "累计充值": self.coordinator.data.get("ljczye"),
             "用户名": self.coordinator.data.get("userName"),
+        }
+
+
+class GuangzhouGasUserNameSensor(GuangzhouGasEntity, SensorEntity):
+    """Sensor for user name."""
+
+    _attr_icon = "mdi:account"
+
+    @property
+    def name(self) -> str:
+        return "用户名"
+
+    @property
+    def unique_id(self) -> Optional[str]:
+        user_no = self.coordinator.data.get("userNo", "unknown")
+        return f"{DOMAIN}_{user_no}_user_name"
+
+    @property
+    def native_value(self) -> StateType:
+        return self.coordinator.data.get("userName")
+
+    @property
+    def extra_state_attributes(self) -> Mapping[str, Any]:
+        return {
+            "用户号": self.coordinator.data.get("userNo"),
+            "地址": self.coordinator.data.get("userAddress"),
+        }
+
+
+class GuangzhouGasUserNoSensor(GuangzhouGasEntity, SensorEntity):
+    """Sensor for user number."""
+
+    _attr_icon = "mdi:identifier"
+
+    @property
+    def name(self) -> str:
+        return "用户号"
+
+    @property
+    def unique_id(self) -> Optional[str]:
+        user_no = self.coordinator.data.get("userNo", "unknown")
+        return f"{DOMAIN}_{user_no}_user_no"
+
+    @property
+    def native_value(self) -> StateType:
+        return self.coordinator.data.get("userNo")
+
+    @property
+    def extra_state_attributes(self) -> Mapping[str, Any]:
+        return {
+            "用户名": self.coordinator.data.get("userName"),
+            "地址": self.coordinator.data.get("userAddress"),
+        }
+
+
+class GuangzhouGasAddressSensor(GuangzhouGasEntity, SensorEntity):
+    """Sensor for address."""
+
+    _attr_icon = "mdi:map-marker"
+
+    @property
+    def name(self) -> str:
+        return "地址"
+
+    @property
+    def unique_id(self) -> Optional[str]:
+        user_no = self.coordinator.data.get("userNo", "unknown")
+        return f"{DOMAIN}_{user_no}_address"
+
+    @property
+    def native_value(self) -> StateType:
+        return self.coordinator.data.get("userAddress")
+
+    @property
+    def extra_state_attributes(self) -> Mapping[str, Any]:
+        return {
+            "用户名": self.coordinator.data.get("userName"),
+            "用户号": self.coordinator.data.get("userNo"),
+        }
+
+
+class GuangzhouGasMeterNoSensor(GuangzhouGasEntity, SensorEntity):
+    """Sensor for meter number."""
+
+    _attr_icon = "mdi:numeric"
+
+    @property
+    def name(self) -> str:
+        return "表号"
+
+    @property
+    def unique_id(self) -> Optional[str]:
+        user_no = self.coordinator.data.get("userNo", "unknown")
+        return f"{DOMAIN}_{user_no}_meter_no"
+
+    @property
+    def native_value(self) -> StateType:
+        return self.coordinator.data.get("bm")
+
+    @property
+    def extra_state_attributes(self) -> Mapping[str, Any]:
+        return {
+            "用户名": self.coordinator.data.get("userName"),
+            "表类型": self.coordinator.data.get("blx"),
+        }
+
+
+class GuangzhouGasMeterTypeSensor(GuangzhouGasEntity, SensorEntity):
+    """Sensor for meter type."""
+
+    _attr_icon = "mdi:gauge"
+
+    @property
+    def name(self) -> str:
+        return "表类型"
+
+    @property
+    def unique_id(self) -> Optional[str]:
+        user_no = self.coordinator.data.get("userNo", "unknown")
+        return f"{DOMAIN}_{user_no}_meter_type"
+
+    @property
+    def native_value(self) -> StateType:
+        return self.coordinator.data.get("blx")
+
+    @property
+    def extra_state_attributes(self) -> Mapping[str, Any]:
+        return {
+            "用户名": self.coordinator.data.get("userName"),
+            "表号": self.coordinator.data.get("bm"),
+        }
+
+
+class GuangzhouGasLastWatchDateSensor(GuangzhouGasEntity, SensorEntity):
+    """Sensor for last watch date."""
+
+    _attr_icon = "mdi:calendar-check"
+
+    @property
+    def name(self) -> str:
+        return "上次抄表日期"
+
+    @property
+    def unique_id(self) -> Optional[str]:
+        user_no = self.coordinator.data.get("userNo", "unknown")
+        return f"{DOMAIN}_{user_no}_last_watch_date"
+
+    @property
+    def native_value(self) -> StateType:
+        return self.coordinator.data.get("lastRecordWatchDate")
+
+    @property
+    def extra_state_attributes(self) -> Mapping[str, Any]:
+        return {
+            "用户名": self.coordinator.data.get("userName"),
+            "上次抄表读数": self.coordinator.data.get("lastRecordWatchNum"),
         }

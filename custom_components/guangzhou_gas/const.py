@@ -109,6 +109,55 @@ SENSOR_TYPES = {
         "unit": None,
         "value_key": "zhczsj",
     },
+    # 新增传感器（从 Node-RED 流程中提取的额外字段）
+    "user_name": {
+        "name": "用户名",
+        "icon": "mdi:account",
+        "device_class": None,
+        "state_class": None,
+        "unit": None,
+        "value_key": "userName",
+    },
+    "user_no": {
+        "name": "用户号",
+        "icon": "mdi:identifier",
+        "device_class": None,
+        "state_class": None,
+        "unit": None,
+        "value_key": "userNo",
+    },
+    "address": {
+        "name": "地址",
+        "icon": "mdi:map-marker",
+        "device_class": None,
+        "state_class": None,
+        "unit": None,
+        "value_key": "userAddress",
+    },
+    "meter_no": {
+        "name": "表号",
+        "icon": "mdi:numeric",
+        "device_class": None,
+        "state_class": None,
+        "unit": None,
+        "value_key": "bm",
+    },
+    "meter_type": {
+        "name": "表类型",
+        "icon": "mdi:gauge",
+        "device_class": None,
+        "state_class": None,
+        "unit": None,
+        "value_key": "blx",
+    },
+    "last_watch_date": {
+        "name": "上次抄表日期",
+        "icon": "mdi:calendar-check",
+        "device_class": None,
+        "state_class": None,
+        "unit": None,
+        "value_key": "lastRecordWatchDate",
+    },
 }
 
 # 设备信息键名
