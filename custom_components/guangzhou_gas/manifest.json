@@ -1,7 +1,7 @@
 {
   "domain": "guangzhou_gas",
   "name": "广州燃气",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "广州燃气 Home Assistant 集成插件",
   "codeowners": [
     "@zoechancn"

@@ -6,13 +6,9 @@ from typing import Any, Mapping, Optional
 from homeassistant.helpers.entity import Entity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.device_registry import DeviceInfo
 
-# Home Assistant 2024.x+ 兼容性：DeviceInfo 已从 helpers.typing 移到 helpers.device_registry
-try:
-    from homeassistant.helpers.device_registry import DeviceInfo
-except ImportError:
-    # 旧版本兼容
-    from homeassistant.helpers.typing import DeviceInfo
+from .const import DOMAIN
 
 
 class GuangzhouGasEntity(Entity):

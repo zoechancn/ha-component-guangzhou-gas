@@ -20,6 +20,18 @@
 
 ---
 
+## [1.1.7] - 2026-05-27
+
+### Fixed
+- 🐛 **修复 `entity.py` 第67行和第81行 `DOMAIN` 未定义错误**
+  - ❌ v1.1.6 在加载传感器时崩溃
+  - ✅ 添加 `from .const import DOMAIN` 导入
+  - ✅ 修复 `unique_id` 属性（第67行）
+  - ✅ 修复 `_get_device_info()` 方法（第81行）
+  - ✅ 错误信息：`name 'DOMAIN' is not defined`
+
+---
+
 ## [1.1.6] - 2026-05-27
 
 ### Fixed
