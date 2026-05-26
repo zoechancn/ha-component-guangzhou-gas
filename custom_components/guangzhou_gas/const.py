@@ -24,7 +24,12 @@ API_GAS_DETAIL_URL = f"{API_BASE_URL}/order/getBiaoDetail.action"
 # HTTP 请求头
 DEFAULT_HEADERS = {
     "Content-Type": "application/json",
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+    "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.38(0x18002633) NetType/WIFI Language/zh_CN",
+    "Referer": "https://servicewechat.com/wx7c8a4c0c0c0c0c0c/0/page-frame.html",
+    "Accept": "application/json, text/plain, */*",
+    "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Connection": "keep-alive",
 }
 
 # 传感器类型定义
