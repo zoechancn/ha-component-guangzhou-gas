@@ -144,11 +144,12 @@ class GuangzhouGasConfigFlow(ConfigFlow, domain=DOMAIN):
             _LOGGER.info("Login successful")
             
             # 测试获取用户信息
+            # api.py 的 async_get_user_info() 现在直接返回 wtVo[0]（字典）
             user_info = await api.async_get_user_info(token)
-            user_name = user_info.get("data", {}).get("userName")
+            user_name = user_info.get("userName")
             
             if not user_name:
-                _LOGGER.warning("User name not found in response")
+                _LOGGER.warning("User name not found in user_info: %s", user_info)
                 return False, "cannot_get_user_info"
                 
             _LOGGER.info("Connection test successful, user: %s", user_name)

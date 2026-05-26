@@ -121,8 +121,19 @@ class GuangzhouGasAPI:
         
         try:
             response = await self._async_request_form(API_USER_INFO_URL, data, headers)
-            _LOGGER.debug("User info received: %s", response.get("data"))
-            return response
+            
+            # 根据 Node-RED：let userInfo = res.data.wtVo;
+            # wtVo 是数组，取第一个元素
+            data = response.get("data", {})
+            wt_vo = data.get("wtVo", [])
+            
+            if not wt_vo or not isinstance(wt_vo, list) or len(wt_vo) == 0:
+                _LOGGER.error("wtVo not found or empty in response: %s", response)
+                raise GuangzhouGasDataError("wtVo not found in user info response")
+            
+            user_info = wt_vo[0]  # 第一个用户的信息
+            _LOGGER.debug("User info received: %s", user_info)
+            return user_info
             
         except GuangzhouGasAPIError as err:
             _LOGGER.error("Get user info failed: %s", err)
@@ -156,8 +167,19 @@ class GuangzhouGasAPI:
         
         try:
             response = await self._async_request_form(API_GAS_DETAIL_URL, data, headers)
-            _LOGGER.debug("Gas detail received: %s", response.get("data"))
-            return response
+            
+            # 根据 Node-RED：let biao = data.rqbList && data.rqbList.length > 0 ? data.rqbList[0] : {};
+            # rqbList 是数组，取第一个元素
+            data = response.get("data", {})
+            rqb_list = data.get("rqbList", [])
+            
+            if not rqb_list or not isinstance(rqb_list, list) or len(rqb_list) == 0:
+                _LOGGER.error("rqbList not found or empty in response: %s", response)
+                raise GuangzhouGasDataError("rqbList not found in gas detail response")
+            
+            gas_detail = rqb_list[0]  # 第一个燃气表的信息
+            _LOGGER.debug("Gas detail received: %s", gas_detail)
+            return gas_detail
             
         except GuangzhouGasAPIError as err:
             _LOGGER.error("Get gas detail failed: %s", err)

@@ -68,15 +68,23 @@ class GuangzhouGasDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             # 获取用户信息
             _LOGGER.debug("Getting user info...")
             user_info = await self._api.async_get_user_info(token)
+            _LOGGER.debug("User info received: %s", user_info)
+            
+            # 从用户信息中获取 user_no，用于查询燃气详情
+            user_no = user_info.get("userNo", "")
+            if not user_no:
+                _LOGGER.error("userNo not found in user_info")
+                raise UpdateFailed("userNo not found in user info")
             
             # 获取燃气详情
-            _LOGGER.debug("Getting gas detail...")
-            gas_detail = await self._api.async_get_gas_detail(token)
+            _LOGGER.debug("Getting gas detail for user %s...", user_no)
+            gas_detail = await self._api.async_get_gas_detail(token, user_no)
+            _LOGGER.debug("Gas detail received: %s", gas_detail)
             
-            # 合并数据
+            # 合并数据（扁平结构）
             data = {
-                **user_info.get("data", {}),
-                **gas_detail.get("data", {}),
+                **user_info,
+                **gas_detail,
             }
             
             _LOGGER.debug("Data update successful: %s", data)
