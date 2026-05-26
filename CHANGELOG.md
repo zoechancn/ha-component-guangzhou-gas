@@ -20,6 +20,29 @@
 
 ---
 
+## [1.1.2] - 2026-05-27
+
+### Fixed
+- 🐛 **完全重构 API 请求逻辑**（根据 Node-RED 流程分析）
+  - ✅ 修复登录请求格式：`unionid` 放在 **header** 里（不是 body）
+  - ✅ `nickName` 和 `acceptKey` 使用 **表单格式** (`x-www-form-urlencoded`)
+  - ✅ 添加 `xweb_xhr: 1` header（微信小程序必需）
+- 🐛 **修复 Token 解析**
+  - ✅ 从 `response["data"]` 获取 token（**字符串**，不是对象）
+  - ✅ Node-RED 流程：`let token = res.data;` （data 直接是 token）
+- 🐛 **修复后续请求认证方式**
+  - ✅ 使用 `accessToken` header（不是 `Authorization: Bearer`）
+  - ✅ 每个请求都带 `unionid` 和 `xweb_xhr: 1`
+- 🐛 **更新请求头**
+  - ✅ `User-Agent` 完全匹配 Node-RED 配置
+  - ✅ `Referer` 完全匹配 Node-RED 配置
+  - ✅ `Content-Type: application/x-www-form-urlencoded`
+
+### Changed
+- 🔧 简化登录逻辑，直接使用表单格式（不再尝试 JSON）
+
+---
+
 ## [1.1.1] - 2026-05-27
 
 ### Fixed
