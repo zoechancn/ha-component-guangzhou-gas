@@ -20,6 +20,19 @@
 
 ---
 
+## [1.1.3] - 2026-05-27
+
+### Fixed
+- 🐛 **完全修复数据解析逻辑**（根据 Node-RED 流程分析）
+  - ✅ 修复 `api.py`: `async_get_user_info()` 现在返回 `wtVo[0]`（不是完整的 API 响应）
+  - ✅ 修复 `api.py`: `async_get_gas_detail()` 现在返回 `rqbList[0]`（不是完整的 API 响应）
+  - ✅ 修复 `config_flow.py`: 正确从 `wtVo[0]["userName"]` 提取用户名
+  - ✅ 修复 `coordinator.py`: 正确调用 API 并合并数据（扁平结构）
+  - ✅ 修复 `coordinator.py`: 从 `user_info` 中提取 `userNo`，用于查询燃气详情
+- ✅ `sensor.py` 无需修改（已在使用正确的中文键名）
+
+---
+
 ## [1.1.2] - 2026-05-27
 
 ### Fixed
@@ -29,7 +42,7 @@
   - ✅ 添加 `xweb_xhr: 1` header（微信小程序必需）
 - 🐛 **修复 Token 解析**
   - ✅ 从 `response["data"]` 获取 token（**字符串**，不是对象）
-  - ✅ Node-RED 流程：`let token = res.data;` （data 直接是 token）
+  - Node-RED 流程：`let token = res.data;` （data 直接是 token）
 - 🐛 **修复后续请求认证方式**
   - ✅ 使用 `accessToken` header（不是 `Authorization: Bearer`）
   - ✅ 每个请求都带 `unionid` 和 `xweb_xhr: 1`
