@@ -1,0 +1,80 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "广州燃气集成",
+        "description": "请输入您的广州燃气认证信息",
+        "data": {
+          "nickname": "昵称 (nickName)",
+          "accept_key": "密钥 (acceptKey)",
+          "unionid": "用户 ID (unionid)",
+          "scan_interval": "更新间隔（秒）"
+        }
+      },
+      "reconfigure": {
+        "title": "重新配置广州燃气",
+        "description": "更新您的广州燃气认证信息",
+        "data": {
+          "nickname": "昵称 (nickName)",
+          "accept_key": "密钥 (acceptKey)",
+          "unionid": "用户 ID (unionid)",
+          "scan_interval": "更新间隔（秒）"
+        }
+      }
+    },
+    "error": {
+      "auth_failed": "认证失败，请检查认证信息",
+      "connection_failed": "连接失败，请检查网络连接",
+      "api_error": "API 调用错误",
+      "cannot_get_user_info": "无法获取用户信息，请检查认证信息",
+      "unknown_error": "发生未知错误"
+    },
+    "abort": {
+      "reconfigure_success": "重新配置成功"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "balance": {
+        "name": "燃气余额",
+        "state": "燃气余额"
+      },
+      "gas_usage": {
+        "name": "阶梯周期用气量",
+        "state": "阶梯周期用气量"
+      },
+      "meter_status": {
+        "name": "燃气表状态",
+        "state": "燃气表状态"
+      },
+      "last_reading": {
+        "name": "上次抄表读数",
+        "state": "上次抄表读数"
+      },
+      "last_recharge": {
+        "name": "最近充值金额",
+        "state": "最近充值金额"
+      },
+      "total_recharge": {
+        "name": "累计充值金额",
+        "state": "累计充值金额"
+      },
+      "billing_cycle": {
+        "name": "阶梯周期",
+        "state": "阶梯周期"
+      },
+      "auto_payment": {
+        "name": "自动扣费",
+        "state": "自动扣费"
+      },
+      "safety_inspection": {
+        "name": "安检状态",
+        "state": "安检状态"
+      },
+      "last_recharge_time": {
+        "name": "最近充值时间",
+        "state": "最近充值时间"
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "code": 200,
+  "msg": " success ",
+  "data": {
+    "userNo": "711111111",
+    "userName": "张三",
+    "userAddress": "广州市天河区测试路1号",
+    "money": "100.50",
+    "bm": "BM11111111",
+    "blx": "IC卡表",
+    "rqbztdes": "正常",
+    "jieti_interval": "2024-01-01 至 2024-12-31",
+    "jieti_amount_benci": "120",
+    "lastRecordWatchNum": "1000",
+    "lastRecordWatchDate": "2024-01-15",
+    "zhczje": "200",
+    "zhczsj": "20240520143000",
+    "ljczye": "500",
+    "feeWay": "银行代扣",
+    "safeInspectHas": "已安检"
+  }
+}

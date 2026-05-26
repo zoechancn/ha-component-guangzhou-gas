@@ -1,0 +1,80 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Guangzhou Gas Integration",
+        "description": "Enter your Guangzhou Gas credentials",
+        "data": {
+          "nickname": "Nick Name",
+          "accept_key": "Accept Key",
+          "unionid": "Union ID",
+          "scan_interval": "Scan Interval (seconds)"
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigure Guangzhou Gas",
+        "description": "Update your Guangzhou Gas credentials",
+        "data": {
+          "nickname": "Nick Name",
+          "accept_key": "Accept Key",
+          "unionid": "Union ID",
+          "scan_interval": "Scan Interval (seconds)"
+        }
+      }
+    },
+    "error": {
+      "auth_failed": "Authentication failed. Please check your credentials.",
+      "connection_failed": "Connection failed. Please check your network.",
+      "api_error": "API error occurred.",
+      "cannot_get_user_info": "Cannot get user info. Please check your credentials.",
+      "unknown_error": "Unknown error occurred."
+    },
+    "abort": {
+      "reconfigure_success": "Reconfiguration successful"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "balance": {
+        "name": "Gas Balance",
+        "state": "Gas Balance"
+      },
+      "gas_usage": {
+        "name": "Gas Usage in Billing Cycle",
+        "state": "Gas Usage"
+      },
+      "meter_status": {
+        "name": "Gas Meter Status",
+        "state": "Meter Status"
+      },
+      "last_reading": {
+        "name": "Last Meter Reading",
+        "state": "Last Reading"
+      },
+      "last_recharge": {
+        "name": "Last Recharge Amount",
+        "state": "Last Recharge"
+      },
+      "total_recharge": {
+        "name": "Total Recharge Amount",
+        "state": "Total Recharge"
+      },
+      "billing_cycle": {
+        "name": "Billing Cycle",
+        "state": "Billing Cycle"
+      },
+      "auto_payment": {
+        "name": "Auto Payment",
+        "state": "Auto Payment"
+      },
+      "safety_inspection": {
+        "name": "Safety Inspection Status",
+        "state": "Safety Inspection"
+      },
+      "last_recharge_time": {
+        "name": "Last Recharge Time",
+        "state": "Last Recharge Time"
+      }
+    }
+  }
+}

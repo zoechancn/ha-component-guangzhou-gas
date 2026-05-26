@@ -1,0 +1,19 @@
+{
+  "domain": "guangzhou_gas",
+  "name": "广州燃气",
+  "version": "1.0.0",
+  "description": "广州燃气 Home Assistant 集成插件",
+  "codeowners": [
+    "@zoechancn"
+  ],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/zoechancn/ha-component-guangzhou-gas",
+  "iot_class": "cloud_polling",
+  "loggers": [
+    "custom_components.guangzhou_gas"
+  ],
+  "requirements": [],
+  "single_config_entry": false,
+  "issue_tracker": "https://github.com/zoechancn/ha-component-guangzhou-gas/issues"
+}
