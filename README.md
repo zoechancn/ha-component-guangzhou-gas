@@ -100,11 +100,11 @@ English | [简体中文](README.zh-Hans.md)
    - **Union ID** (`unionid`): 用户 ID（从抓包获取）
    - **更新间隔（秒）**: 默认 10800 秒（3 小时），可根据需要调整
 5. 点击 "提交"
-6. 如果配置正确，将显示 "配置成功"，并自动创建 10 个传感器实体
+6. 如果配置正确，将显示 "配置成功"，并自动创建 16 个传感器实体
 
 ## 传感器说明
 
-本集成插件会创建以下 10 个传感器实体：
+本集成插件会创建以下 16 个传感器实体：
 
 | 传感器名称 | 实体 ID | 单位 | 图标 | 说明 |
 |-----------|---------|------|------|------|
@@ -118,6 +118,12 @@ English | [简体中文](README.zh-Hans.md)
 | 自动扣费 | `sensor.guangzhou_gas_auto_payment` | - | 💳 | 自动扣费功能的状态 |
 | 安检状态 | `sensor.guangzhou_gas_safety_inspection` | - | 🛡️ | 最近一次安检的状态 |
 | 最近充值时间 | `sensor.guangzhou_gas_last_recharge_time` | - | 🕐 | 最近一次充值的时间 |
+| 用户名 | `sensor.guangzhou_gas_user_name` | - | 👤 | 燃气账户的用户名 |
+| 用户号 | `sensor.guangzhou_gas_user_no` | - | 🔢 | 燃气账户的用户号 |
+| 地址 | `sensor.guangzhou_gas_address` | - | 🏠 | 燃气表安装地址 |
+| 表号 | `sensor.guangzhou_gas_meter_no` | - | 🔖 | 燃气表的表号 |
+| 表类型 | `sensor.guangzhou_gas_meter_type` | - | 🏷️ | 燃气表的类型 |
+| 上次抄表日期 | `sensor.guangzhou_gas_last_watch_date` | - | 📆 | 上次抄表的日期 |
 
 ### 额外属性
 
