@@ -20,6 +20,18 @@
 
 ---
 
+## [1.1.5] - 2026-05-27
+
+### Fixed
+- 🐛 **修复 Home Assistant 新版本 API 兼容性**
+  - ❌ v1.1.4 使用已弃用的 `async_forward_entry_setup()` 方法
+  - ✅ 新版本 Home Assistant (2024.x+) 使用 `async_forward_entry_setups()` (带 's')
+  - ✅ 修复 `__init__.py`: 平台加载使用新 API `async_forward_entry_setups(entry, ["sensor"])`
+  - ✅ 修复 `__init__.py`: 平台卸载使用新 API `async_unload_platforms(entry, ["sensor"])`
+  - ✅ 错误信息：`'ConfigEntries' object has no attribute 'async_forward_entry_setup'`
+
+---
+
 ## [1.1.4] - 2026-05-27
 
 ### Fixed

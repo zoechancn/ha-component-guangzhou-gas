@@ -88,8 +88,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # 存储协调器到 hass.data
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
     
-    # 转发传感器平台
-    await hass.config_entries.async_forward_entry_setup(entry, "sensor")
+    # 转发传感器平台（新版本 API）
+    await hass.config_entries.async_forward_entry_setups(entry, ["sensor"])
     
     # 监听配置条目的更新/卸载
     entry.async_on_unload(entry.add_update_listener(async_update_options))
@@ -110,8 +110,8 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """
     _LOGGER.info("Unloading Guangzhou Gas integration (entry_id=%s)", entry.entry_id)
     
-    # 卸载传感器平台
-    unload_ok = await hass.config_entries.async_forward_entry_unload(entry, "sensor")
+    # 卸载传感器平台（新版本 API）
+    unload_ok = await hass.config_entries.async_unload_platforms(entry, ["sensor"])
     
     # 从 hass.data 中移除协调器
     if unload_ok:
