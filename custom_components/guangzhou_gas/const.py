@@ -21,15 +21,18 @@ API_LOGIN_URL = f"{API_BASE_URL}/login/getToken.action"
 API_USER_INFO_URL = f"{API_BASE_URL}/bind/getUserByShowIndex.action"
 API_GAS_DETAIL_URL = f"{API_BASE_URL}/order/getBiaoDetail.action"
 
-# HTTP 请求头
+# HTTP 请求头（模拟 Node-RED 微信小程序请求）
 DEFAULT_HEADERS = {
-    "Content-Type": "application/json",
-    "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.38(0x18002633) NetType/WIFI Language/zh_CN",
-    "Referer": "https://servicewechat.com/wx7c8a4c0c0c0c0c0c/0/page-frame.html",
-    "Accept": "application/json, text/plain, */*",
-    "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
-    "Accept-Encoding": "gzip, deflate, br",
+    "Host": "wxxcx.gzgas.com",
     "Connection": "keep-alive",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 MicroMessenger/7.0.20.1781(0x6700143B) NetType/WIFI MiniProgramEnv/Windows WindowsWechat/WMPF WindowsWechat(0xf254186b) XWEB/19481",
+    "Content-Type": "application/x-www-form-urlencoded",
+    "Accept": "*/*",
+    "Sec-Fetch-Site": "cross-site",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Dest": "empty",
+    "Referer": "https://servicewechat.com/wx6a4fd0ebb4a12c11/366/page-frame.html",
+    "Accept-Language": "zh-CN,zh;q=0.9",
 }
 
 # 传感器类型定义
