@@ -432,13 +432,16 @@ class GuangzhouGasLastRechargeTimeSensor(GuangzhouGasEntity, SensorEntity):
         """Return sensor state."""
         # API 返回的时间格式：20240512211243（YYYYMMDDHHMMSS）
         time_str = self.coordinator.data.get("zhczsj")
+        _LOGGER.debug("Last recharge time: %s", time_str)
         if not time_str or len(time_str) != 14:
+            _LOGGER.debug("Invalid zhczsj format: %s (length: %s)", time_str, len(time_str) if time_str else 0)
             return None
         
         try:
             dt = datetime.strptime(time_str, "%Y%m%d%H%M%S")
             return dt.isoformat()
         except (ValueError, TypeError):
+            _LOGGER.error("Failed to parse zhczsj: %s", time_str)
             return None
             
     @property
@@ -724,6 +727,7 @@ class GuangzhouGasSafetyInspectionDateSensor(GuangzhouGasEntity, SensorEntity):
     def native_value(self) -> StateType:
         """Return sensor state."""
         date_str = self.coordinator.data.get("safeInspectDate")
+        _LOGGER.debug("Safety inspection date: %s", date_str)
         if not date_str:
             return None
         
@@ -732,6 +736,7 @@ class GuangzhouGasSafetyInspectionDateSensor(GuangzhouGasEntity, SensorEntity):
             dt = datetime.strptime(date_str[:10], "%Y-%m-%d")
             return dt.date().isoformat()
         except (ValueError, TypeError):
+            _LOGGER.error("Failed to parse safeInspectDate: %s", date_str)
             return None
             
     @property
@@ -761,6 +766,7 @@ class GuangzhouGasStartFireDateSensor(GuangzhouGasEntity, SensorEntity):
     def native_value(self) -> StateType:
         """Return sensor state."""
         time_str = self.coordinator.data.get("startFireDate")
+        _LOGGER.debug("Start fire date: %s", time_str)
         if not time_str:
             return None
         
@@ -769,6 +775,7 @@ class GuangzhouGasStartFireDateSensor(GuangzhouGasEntity, SensorEntity):
             dt = datetime.strptime(time_str, "%Y-%m-%d %H:%M:%S")
             return dt.isoformat()
         except (ValueError, TypeError):
+            _LOGGER.error("Failed to parse startFireDate: %s", time_str)
             return None
             
     @property
@@ -887,6 +894,7 @@ class GuangzhouGasInsuranceExpireSensor(GuangzhouGasEntity, SensorEntity):
     def native_value(self) -> StateType:
         """Return sensor state."""
         date_str = self.coordinator.data.get("bxjzrq")
+        _LOGGER.debug("Insurance expire date: %s", date_str)
         if not date_str:
             return None
         
@@ -895,6 +903,7 @@ class GuangzhouGasInsuranceExpireSensor(GuangzhouGasEntity, SensorEntity):
             dt = datetime.strptime(date_str, "%Y-%m-%d")
             return dt.date().isoformat()
         except (ValueError, TypeError):
+            _LOGGER.error("Failed to parse bxjzrq: %s", date_str)
             return None
             
     @property
@@ -1007,6 +1016,7 @@ class GuangzhouGasInsuranceInvalidSensor(GuangzhouGasEntity, SensorEntity):
     def native_value(self) -> StateType:
         """Return sensor state."""
         date_str = self.coordinator.data.get("bxsxrq")
+        _LOGGER.debug("Insurance invalid date: %s", date_str)
         if not date_str:
             return None
         
@@ -1015,6 +1025,7 @@ class GuangzhouGasInsuranceInvalidSensor(GuangzhouGasEntity, SensorEntity):
             dt = datetime.strptime(date_str, "%Y-%m-%d")
             return dt.date().isoformat()
         except (ValueError, TypeError):
+            _LOGGER.error("Failed to parse bxsxrq: %s", date_str)
             return None
             
     @property
@@ -1030,7 +1041,7 @@ class GuangzhouGasInsuranceInvalidSensor(GuangzhouGasEntity, SensorEntity):
 class GuangzhouGasGasAddressStatusSensor(GuangzhouGasEntity, SensorEntity):
     """Sensor for gas address status."""
     
-    _attr_icon = "mdi:home-check"
+    _attr_icon = "mdi:home-check-outline"
     
     @property
     def name(self) -> str:
