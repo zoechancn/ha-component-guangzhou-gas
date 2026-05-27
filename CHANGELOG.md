@@ -20,6 +20,19 @@
 
 ---
 
+## [1.1.9] - 2026-05-27
+
+### Fixed
+- 🐛 **修复 `sensor.py` 和 `const.py` 中 `yqdzztDes` 大小写错误**
+  - ❌ v1.1.8 中"用气地址状态"传感器显示"不可用"
+  - ✅ 原因：`const.py` 第280行 `value_key: "yqdzztDes"` 大小写错误（应为全小写 `yqdzztdes`）
+  - ✅ 原因：`sensor.py` 第1047行 `self.coordinator.data.get("yqdzztDes")` 大小写错误
+  - ✅ 修复：统一改为 `"yqdzztdes"`（全小写，与 API 实际返回字段名一致）
+  - ✅ 验证：运行 `test_all_sensors.py`，全部 36 个传感器 `value_key` 均能在合并数据中找到
+  - ✅ 错误信息：`sensor.native_value returned None`（HA 中显示"不可用"）
+
+---
+
 ## [1.1.8] - 2026-05-27
 
 ### Added
