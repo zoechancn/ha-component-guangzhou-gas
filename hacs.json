@@ -1,6 +1,7 @@
 {
   "name": "广州燃气",
   "render_readme": true,
+  "icon": "gas-cylinder",
   "domains": [
     "sensor"
   ],

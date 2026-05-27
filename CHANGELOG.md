@@ -20,6 +20,19 @@
 
 ---
 
+## [1.1.12] - 2026-05-27
+
+### Fixed
+- 🎨 **修复 HACS 商店列表不显示图标问题**
+  - ❌ v1.1.11 中 HACS 商店列表显示灰色占位图标
+  - ❌ 原因：`manifest.json` 的 `icon` 字段只在 HA 配置界面有效，HACS 商店不读取
+  - ✅ 修复 `hacs.json`：添加 `"icon": "gas-cylinder"` 字段
+  - ✅ 新增 `icon.png`：48x48 像素绿色燃气罐图标
+  - ✅ 新增 `icon.svg`：SVG 矢量图标源文件
+  - ✅ 修改文件：`hacs.json`, `icon.png`, `icon.svg`
+
+---
+
 ## [1.1.11] - 2026-05-27
 
 ### Fixed
