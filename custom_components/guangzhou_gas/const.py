@@ -277,7 +277,7 @@ SENSOR_TYPES = {
         "device_class": None,
         "state_class": None,
         "unit": None,
-        "value_key": "yqdzztDes",
+        "value_key": "yqdzztdes",
     },
     "customer_id": {
         "name": "客户ID",

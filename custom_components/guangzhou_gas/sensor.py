@@ -1043,7 +1043,7 @@ class GuangzhouGasGasAddressStatusSensor(GuangzhouGasEntity, SensorEntity):
         
     @property
     def native_value(self) -> StateType:
-        return self.coordinator.data.get("yqdzztDes")
+        return self.coordinator.data.get("yqdzztdes")
         
     @property
     def extra_state_attributes(self) -> Mapping[str, Any]:
