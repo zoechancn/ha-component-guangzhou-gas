@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import logging
-from datetime import datetime
+from datetime import datetime, date, timezone
 from typing import Any, Mapping, Optional
 
 from homeassistant.core import HomeAssistant
@@ -280,7 +280,7 @@ class GuangzhouGasTotalRechargeSensor(GuangzhouGasEntity, SensorEntity):
     """Sensor for total recharge amount."""
     
     _attr_device_class = SensorDeviceClass.MONETARY
-    _attr_state_class = SensorStateClass.TOTAL_INCREASING
+    _attr_state_class = SensorStateClass.TOTAL
     _attr_icon = "mdi:cash"
     _attr_native_unit_of_measurement = "元"
     
@@ -439,7 +439,8 @@ class GuangzhouGasLastRechargeTimeSensor(GuangzhouGasEntity, SensorEntity):
         
         try:
             dt = datetime.strptime(time_str, "%Y%m%d%H%M%S")
-            return dt.isoformat()
+            # Home Assistant 2024.x+ 要求返回 datetime 对象（带时区）
+            return dt.replace(tzinfo=timezone.utc)
         except (ValueError, TypeError):
             _LOGGER.error("Failed to parse zhczsj: %s", time_str)
             return None
@@ -734,7 +735,8 @@ class GuangzhouGasSafetyInspectionDateSensor(GuangzhouGasEntity, SensorEntity):
         # API 返回格式：2025-06-13 00:00:00
         try:
             dt = datetime.strptime(date_str[:10], "%Y-%m-%d")
-            return dt.date().isoformat()
+            # Home Assistant 2024.x+ 要求返回 date 对象
+            return dt.date()
         except (ValueError, TypeError):
             _LOGGER.error("Failed to parse safeInspectDate: %s", date_str)
             return None
@@ -773,7 +775,8 @@ class GuangzhouGasStartFireDateSensor(GuangzhouGasEntity, SensorEntity):
         # API 返回格式：2025-06-12 01:42:17
         try:
             dt = datetime.strptime(time_str, "%Y-%m-%d %H:%M:%S")
-            return dt.isoformat()
+            # Home Assistant 2024.x+ 要求返回 datetime 对象（带时区）
+            return dt.replace(tzinfo=timezone.utc)
         except (ValueError, TypeError):
             _LOGGER.error("Failed to parse startFireDate: %s", time_str)
             return None
@@ -901,7 +904,8 @@ class GuangzhouGasInsuranceExpireSensor(GuangzhouGasEntity, SensorEntity):
         # API 返回格式：2026-06-05
         try:
             dt = datetime.strptime(date_str, "%Y-%m-%d")
-            return dt.date().isoformat()
+            # Home Assistant 2024.x+ 要求返回 date 对象
+            return dt.date()
         except (ValueError, TypeError):
             _LOGGER.error("Failed to parse bxjzrq: %s", date_str)
             return None
@@ -1023,7 +1027,8 @@ class GuangzhouGasInsuranceInvalidSensor(GuangzhouGasEntity, SensorEntity):
         # API 返回格式：2025-06-05
         try:
             dt = datetime.strptime(date_str, "%Y-%m-%d")
-            return dt.date().isoformat()
+            # Home Assistant 2024.x+ 要求返回 date 对象
+            return dt.date()
         except (ValueError, TypeError):
             _LOGGER.error("Failed to parse bxsxrq: %s", date_str)
             return None

@@ -20,6 +20,25 @@
 
 ---
 
+## [1.1.11] - 2026-05-27
+
+### Fixed
+- 🐛 **修复 DATE/TIMESTAMP 传感器返回字符串错误**
+  - ❌ Home Assistant 2024.x+ 要求 DATE 设备类返回 `datetime.date` 对象
+  - ❌ Home Assistant 2024.x+ 要求 TIMESTAMP 设备类返回 `datetime.datetime` 对象（带时区）
+  - ❌ v1.1.10 中这些传感器返回了字符串，导致 HA 报错
+  - ✅ 修复：所有日期/时间传感器现在返回正确的对象类型
+  - ✅ 修复传感器：安检日期、点火日期、保险截止日期、保险失效日期、最近充值时间
+  - ✅ 修改文件：`sensor.py`
+
+- 🐛 **修复累计充值金额状态类错误**
+  - ❌ v1.1.10 中累计充值金额使用了 `total_increasing` 状态类
+  - ❌ `monetary` 设备类不能使用 `total_increasing`，只能用 `total` 或 `None`
+  - ✅ 修复：改为 `SensorStateClass.TOTAL`
+  - ✅ 修改文件：`sensor.py` 第283行
+
+---
+
 ## [1.1.10] - 2026-05-27
 
 ### Changed
