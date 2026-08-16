@@ -1,8 +1,8 @@
 {
   "domain": "guangzhou_gas",
   "name": "广州燃气",
-  "version": "1.1.12",
-  "description": "广州燃气 Home Assistant 集成插件",
+  "version": "2.0.0",
+  "description": "广州燃气账户、燃气表余额与用气信息",
   "icon": "mdi:gas-cylinder",
   "codeowners": [
     "@zoechancn"
