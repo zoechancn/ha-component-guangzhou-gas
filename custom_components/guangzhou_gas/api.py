@@ -1,20 +1,16 @@
-"""Guangzhou Gas API Client."""
+"""Asynchronous client for the Guangzhou Gas mini-program API."""
+
 from __future__ import annotations
 
 import asyncio
 import logging
+from collections.abc import Mapping
 from typing import Any
 
 import aiohttp
 import async_timeout
-from homeassistant.core import HomeAssistant
 
-from .const import (
-    API_LOGIN_URL,
-    API_USER_INFO_URL,
-    API_GAS_DETAIL_URL,
-    DEFAULT_HEADERS,
-)
+from .const import API_GAS_DETAIL_URL, API_LOGIN_URL, API_USER_INFO_URL, DEFAULT_HEADERS
 from .exceptions import (
     GuangzhouGasAPIError,
     GuangzhouGasAuthError,
@@ -24,13 +20,13 @@ from .exceptions import (
 
 _LOGGER = logging.getLogger(__name__)
 
-TIMEOUT = 10  # 请求超时时间（秒）
-MAX_RETRIES = 3  # 最大重试次数
+REQUEST_TIMEOUT = 15
+MAX_RETRIES = 3
 
 
 class GuangzhouGasAPI:
-    """Guangzhou Gas API Client."""
-    
+    """Client for the endpoints used by the Guangzhou Gas mini program."""
+
     def __init__(
         self,
         session: aiohttp.ClientSession,
@@ -38,296 +34,137 @@ class GuangzhouGasAPI:
         accept_key: str,
         unionid: str,
     ) -> None:
-        """Initialize the API client.
-        
-        Args:
-            session: aiohttp ClientSession.
-            nickname: User nickname.
-            accept_key: User accept key.
-            unionid: User union ID.
-        """
+        """Initialize the API client."""
         self._session = session
         self._nickname = nickname
         self._accept_key = accept_key
         self._unionid = unionid
-        self._token: str | None = None
-        
+
+    def _headers(self, token: str | None = None) -> dict[str, str]:
+        """Build request headers without exposing credentials in logs."""
+        headers = {**DEFAULT_HEADERS, "unionid": self._unionid}
+        if token:
+            headers["accessToken"] = token
+        return headers
+
     async def async_login(self) -> str:
-        """Login and get token.
-        
-        Returns:
-            Token string.
-            
-        Raises:
-            GuangzhouGasAuthError: Authentication failed.
-            GuangzhouGasConnectionError: Connection failed.
-            GuangzhouGasAPIError: API error.
-        """
-        _LOGGER.debug("Logging in as %s", self._nickname)
-        
-        # 根据 Node-RED 流程，登录时使用表单格式
-        # nickName 和 acceptKey 放在 body，unionid 放在 header
-        data = f"nickName={self._nickname}&acceptKey={self._accept_key}"
-        
-        headers = {
-            **DEFAULT_HEADERS,
-            "unionid": self._unionid,
-            "xweb_xhr": "1",
-        }
-        
-        try:
-            response = await self._async_request_form(API_LOGIN_URL, data, headers)
-            
-            # 根据 Node-RED：let token = res.data;
-            # Token 是直接存在 data 字段里（字符串），不是 data.token
-            token = response.get("data")
-            
-            if not token or not isinstance(token, str):
-                _LOGGER.error("Token not found in response: %s", response)
-                raise GuangzhouGasDataError("Token not found in response")
-            
-            self._token = token
-            _LOGGER.debug("Login successful, token: %s...", token[:10])
-            return token
-            
-        except GuangzhouGasAPIError as err:
-            _LOGGER.error("Login failed: %s", err)
-            raise
-            
+        """Authenticate and return a short-lived access token."""
+        response = await self._async_request_form(
+            API_LOGIN_URL,
+            {"nickName": self._nickname, "acceptKey": self._accept_key},
+            self._headers(),
+        )
+        token = response.get("data")
+        if not isinstance(token, str) or not token:
+            raise GuangzhouGasDataError("The login response did not contain a token")
+        return token
+
     async def async_get_user_info(self, token: str) -> dict[str, Any]:
-        """Get user info.
-        
-        Args:
-            token: Authentication token.
-            
-        Returns:
-            User info data.
-            
-        Raises:
-            GuangzhouGasConnectionError: Connection failed.
-            GuangzhouGasAPIError: API error.
-        """
-        _LOGGER.debug("Getting user info")
-        
-        # 根据 Node-RED：msg.payload = '{}';
-        data = "{}"
-        
-        headers = {
-            **DEFAULT_HEADERS,
-            "unionid": self._unionid,
-            "xweb_xhr": "1",
-            "accessToken": token,  # ← 关键：Node-RED 用 accessToken，不是 Authorization
-        }
-        
-        try:
-            response = await self._async_request_form(API_USER_INFO_URL, data, headers)
-            
-            # 根据真实 API 响应：
-            # - data.wtVo 是对象（dict），不是数组（list）
-            # - 但有些情况下可能是数组，所以需要兼容处理
-            data = response.get("data", {})
-            wt_vo = data.get("wtVo", {})
-            
-            if not wt_vo:
-                _LOGGER.error("wtVo not found or empty in response: %s", response)
-                raise GuangzhouGasDataError("wtVo not found in user info response")
-            
-            # 兼容处理：wtVo 可能是 dict 或 list
-            if isinstance(wt_vo, list):
-                if len(wt_vo) == 0:
-                    raise GuangzhouGasDataError("wtVo array is empty")
-                user_info = wt_vo[0]  # 数组情况：取第一个元素
-                _LOGGER.debug("wtVo is list, using first element")
-            elif isinstance(wt_vo, dict):
-                user_info = wt_vo  # 对象情况：直接使用
-                _LOGGER.debug("wtVo is dict, using directly")
-            else:
-                _LOGGER.error("wtVo has unexpected type: %s", type(wt_vo))
-                raise GuangzhouGasDataError(f"wtVo has unexpected type: {type(wt_vo)}")
-            
-            _LOGGER.debug("User info received: %s", user_info)
-            return user_info
-            
-        except GuangzhouGasAPIError as err:
-            _LOGGER.error("Get user info failed: %s", err)
-            raise
-            
+        """Return the bound gas account selected by the mini program."""
+        response = await self._async_request_form(
+            API_USER_INFO_URL,
+            {},
+            self._headers(token),
+        )
+        data = response.get("data")
+        if not isinstance(data, Mapping):
+            raise GuangzhouGasDataError("User response did not contain an object")
+        return self._extract_record(data.get("wtVo"), "wtVo")
+
     async def async_get_gas_detail(self, token: str, user_no: str) -> dict[str, Any]:
-        """Get gas detail.
-        
-        Args:
-            token: Authentication token.
-            user_no: User number (for query).
-            
-        Returns:
-            Gas detail data.
-            
-        Raises:
-            GuangzhouGasConnectionError: Connection failed.
-            GuangzhouGasAPIError: API error.
-        """
-        _LOGGER.debug("Getting gas detail for user %s", user_no)
-        
-        # 根据 Node-RED：msg.payload = 'userno=' + encodeURIComponent(userInfo.userNo);
-        data = f"userno={user_no}"
-        
-        headers = {
-            **DEFAULT_HEADERS,
-            "unionid": self._unionid,
-            "xweb_xhr": "1",
-            "accessToken": token,
+        """Return meter, balance and recharge information for an account."""
+        response = await self._async_request_form(
+            API_GAS_DETAIL_URL,
+            {"userno": user_no},
+            self._headers(token),
+        )
+        data = response.get("data")
+        if not isinstance(data, Mapping):
+            raise GuangzhouGasDataError("Meter response did not contain an object")
+
+        meter = self._extract_record(data.get("rqbList"), "rqbList")
+        # Some useful totals live beside rqbList rather than inside it.
+        return {
+            **{key: value for key, value in data.items() if key != "rqbList"},
+            **meter,
         }
-        
-        try:
-            response = await self._async_request_form(API_GAS_DETAIL_URL, data, headers)
-            
-            # 根据真实 API 响应：
-            # - data.rqbList 可能是对象（dict）或数组（list）
-            # - 需要兼容处理
-            data = response.get("data", {})
-            rqb_list = data.get("rqbList", {})
-            
-            if not rqb_list:
-                _LOGGER.error("rqbList not found or empty in response: %s", response)
-                raise GuangzhouGasDataError("rqbList not found in gas detail response")
-            
-            # 兼容处理：rqbList 可能是 dict 或 list
-            if isinstance(rqb_list, list):
-                if len(rqb_list) == 0:
-                    raise GuangzhouGasDataError("rqbList array is empty")
-                gas_detail = rqb_list[0]  # 数组情况：取第一个元素
-                _LOGGER.debug("rqbList is list, using first element")
-            elif isinstance(rqb_list, dict):
-                gas_detail = rqb_list  # 对象情况：直接使用
-                _LOGGER.debug("rqbList is dict, using directly")
-            else:
-                _LOGGER.error("rqbList has unexpected type: %s", type(rqb_list))
-                raise GuangzhouGasDataError(f"rqbList has unexpected type: {type(rqb_list)}")
-            
-            _LOGGER.debug("Gas detail received: %s", gas_detail)
-            return gas_detail
-            
-        except GuangzhouGasAPIError as err:
-            _LOGGER.error("Get gas detail failed: %s", err)
-            raise
-    
+
+    @staticmethod
+    def _extract_record(value: Any, field: str) -> dict[str, Any]:
+        """Accept the object and one-item-list variants used by the API."""
+        if isinstance(value, Mapping):
+            return dict(value)
+        if isinstance(value, list) and value and isinstance(value[0], Mapping):
+            return dict(value[0])
+        raise GuangzhouGasDataError(f"{field} did not contain a usable record")
+
     async def _async_request_form(
         self,
         url: str,
-        data: str,
-        headers: dict[str, str],
+        data: Mapping[str, str],
+        headers: Mapping[str, str],
     ) -> dict[str, Any]:
-        """Make HTTP request with form data (x-www-form-urlencoded).
-        
-        Args:
-            url: Request URL.
-            data: Request data (form encoded string).
-            headers: Request headers.
-            
-        Returns:
-            JSON response data.
-            
-        Raises:
-            GuangzhouGasAuthError: Authentication failed.
-            GuangzhouGasConnectionError: Connection failed.
-            GuangzhouGasAPIError: API error.
-        """
+        """POST an encoded form and return a validated JSON object."""
+        last_error: Exception | None = None
+
         for attempt in range(1, MAX_RETRIES + 1):
             try:
-                async with async_timeout.timeout(TIMEOUT):
-                    _LOGGER.debug("Sending POST request to %s with data: %s", url, data)
-                    _LOGGER.debug("Headers: %s", {k: v for k, v in headers.items() if k.lower() not in ["unionid", "accesstoken"]})
-                    
-                    response = await self._session.post(
-                        url,
-                        data=data,  # 表单格式（字符串）
-                        headers=headers,
-                    )
-                
-                # 检查 HTTP 状态码
-                response.raise_for_status()
-                
-                # 先记录响应内容（用于调试）
-                response_text = await response.text()
-                _LOGGER.debug("Response status: %s", response.status)
-                _LOGGER.debug("Response headers: %s", dict(response.headers))
-                _LOGGER.debug("Response text: %s", response_text[:1000])
-                
-                # 尝试解析 JSON（忽略 Content-Type 检查）
-                try:
-                    json_data = await response.json(content_type=None)
-                except Exception as json_err:
-                    _LOGGER.error("Failed to parse JSON (attempt %d/%d): %s", 
-                                 attempt, MAX_RETRIES, json_err)
-                    _LOGGER.error("Response text: %s", response_text[:1000])
-                    if attempt == MAX_RETRIES:
-                        raise GuangzhouGasAPIError(f"Failed to parse JSON: {json_err}") from json_err
-                    continue
-                
-                _LOGGER.debug("Response JSON: %s", json_data)
-                
-                # 检查 API 返回的状态
-                # 根据 Node-RED，成功时返回 {code: 200, data: {...}}
-                # 注意：不同 API 可能使用不同的字段名
-                api_code = json_data.get("code", json_data.get("status", json_data.get("errcode")))
-                api_msg = json_data.get("msg", json_data.get("message", json_data.get("errmsg", "")))
-                
-                _LOGGER.debug("API response - code: %s, msg: %s", api_code, api_msg)
-                
-                # 判断成功条件
-                is_success = (
-                    api_code == 200 
-                    or str(api_code) == "0" 
-                    or api_code is True 
-                    or api_code is None  # 有些 API 成功时不返回 code 字段
-                    or (isinstance(json_data, dict) and "data" in json_data)  # 有 data 字段可能是成功
+                async with (
+                    async_timeout.timeout(REQUEST_TIMEOUT),
+                    self._session.post(url, data=data, headers=headers) as response,
+                ):
+                    if response.status in {401, 403}:
+                        raise GuangzhouGasAuthError("Authentication was rejected")
+                    response.raise_for_status()
+                    payload = await response.json(content_type=None)
+
+                if not isinstance(payload, dict):
+                    raise GuangzhouGasDataError("API response was not a JSON object")
+                self._validate_response(payload)
+                return payload
+
+            except GuangzhouGasAuthError:
+                raise
+            except GuangzhouGasAPIError:
+                raise
+            except (aiohttp.ClientError, asyncio.TimeoutError, ValueError) as err:
+                last_error = err
+                if attempt == MAX_RETRIES:
+                    break
+                delay = 2 ** (attempt - 1)
+                _LOGGER.debug(
+                    "Guangzhou Gas request failed; retrying in %s seconds (%s/%s)",
+                    delay,
+                    attempt,
+                    MAX_RETRIES,
                 )
-                
-                if not is_success:
-                    # 构造详细错误信息（包含完整响应）
-                    error_detail = f"{api_msg}" if api_msg else f"API returned: {json_data}"
-                    error_msg = f"{error_detail} (code: {api_code})"
-                    
-                    _LOGGER.error("API error (attempt %d/%d): %s", 
-                                 attempt, MAX_RETRIES, error_msg)
-                    
-                    # 如果是认证错误，直接抛出异常
-                    error_str = str(error_detail).lower()
-                    if "认证" in error_str or "登录" in error_str or "token" in error_str or "auth" in error_str:
-                        raise GuangzhouGasAuthError(f"Authentication failed: {error_detail}")
-                    
-                    # 如果是最后一次重试，抛出异常
-                    if attempt == MAX_RETRIES:
-                        raise GuangzhouGasAPIError(f"API error: {error_msg}")
-                    
-                    # 否则重试
-                    continue
-                
-                return json_data
-                
-            except aiohttp.ClientResponseError as err:
-                _LOGGER.error("HTTP error (attempt %d/%d): %s", 
-                             attempt, MAX_RETRIES, err)
-                if attempt == MAX_RETRIES:
-                    raise GuangzhouGasConnectionError(f"HTTP error: {err}") from err
-                
-            except aiohttp.ClientError as err:
-                _LOGGER.error("Connection error (attempt %d/%d): %s", 
-                             attempt, MAX_RETRIES, err)
-                if attempt == MAX_RETRIES:
-                    raise GuangzhouGasConnectionError(f"Connection failed: {err}") from err
-                
-            except asyncio.TimeoutError:
-                _LOGGER.error("Request timeout (attempt %d/%d)", 
-                             attempt, MAX_RETRIES)
-                if attempt == MAX_RETRIES:
-                    raise GuangzhouGasConnectionError("Request timeout") from None
-            
-            # 重试前等待（指数退避）
-            if attempt < MAX_RETRIES:
-                wait_time = 2 ** (attempt - 1)  # 1, 2, 4 秒
-                _LOGGER.info("Retrying in %d seconds...", wait_time)
-                await asyncio.sleep(wait_time)
-        
-        # 理论上不会执行到这里
-        raise GuangzhouGasAPIError("Max retries exceeded")
+                await asyncio.sleep(delay)
+
+        raise GuangzhouGasConnectionError(
+            f"Request failed after {MAX_RETRIES} attempts: {last_error}"
+        ) from last_error
+
+    @staticmethod
+    def _validate_response(payload: Mapping[str, Any]) -> None:
+        """Convert mini-program error envelopes into integration exceptions."""
+        code = payload.get("code")
+        errcode = payload.get("errcode")
+        is_error = payload.get("error") is True
+        successful = code in {None, 0, 200, "0", "200"} and errcode in {
+            None,
+            0,
+            "0",
+        }
+        if successful and not is_error:
+            return
+
+        message = str(
+            payload.get("errmsg")
+            or payload.get("msg")
+            or payload.get("message")
+            or "Unknown API error"
+        )
+        normalized = message.lower()
+        if any(word in normalized for word in ("认证", "登录", "token", "auth")):
+            raise GuangzhouGasAuthError(message)
+        raise GuangzhouGasAPIError(message)

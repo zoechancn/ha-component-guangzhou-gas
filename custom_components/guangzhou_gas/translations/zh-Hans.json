@@ -2,103 +2,75 @@
   "config": {
     "step": {
       "user": {
-        "title": "广州燃气集成",
-        "description": "请输入您的广州燃气认证信息",
+        "title": "添加广州燃气",
+        "description": "输入从广州燃气微信小程序获取的认证信息。认证信息仅保存在 Home Assistant 中。",
         "data": {
-          "nickname": "昵称 (nickName)",
-          "accept_key": "密钥 (acceptKey)",
-          "unionid": "用户 ID (unionid)",
+          "nickname": "微信昵称",
+          "accept_key": "认证密钥",
+          "unionid": "微信 Union ID",
           "scan_interval": "更新间隔（秒）"
         }
       },
       "reconfigure": {
-        "title": "重新配置广州燃气",
-        "description": "更新您的广州燃气认证信息",
+        "title": "重新认证广州燃气",
+        "description": "更新微信小程序的认证信息。",
         "data": {
-          "nickname": "昵称 (nickName)",
-          "accept_key": "密钥 (acceptKey)",
-          "unionid": "用户 ID (unionid)",
+          "nickname": "微信昵称",
+          "accept_key": "认证密钥",
+          "unionid": "微信 Union ID",
           "scan_interval": "更新间隔（秒）"
         }
       }
     },
     "error": {
-      "auth_failed": "认证失败，请检查认证信息",
-      "connection_failed": "连接失败，请检查网络连接",
-      "api_error": "API 调用错误",
-      "cannot_get_user_info": "无法获取用户信息，请检查认证信息",
+      "auth_failed": "认证失败，请重新获取认证信息",
+      "connection_failed": "无法连接广州燃气服务器",
+      "api_error": "广州燃气服务器返回错误",
+      "cannot_get_user_info": "无法获取燃气账户信息",
       "unknown_error": "发生未知错误"
     },
     "abort": {
-      "reconfigure_success": "重新配置成功"
+      "reconfigure_success": "认证信息已更新"
     }
   },
   "entity": {
     "sensor": {
-      "balance": {
-        "name": "燃气余额",
-        "state": "燃气余额"
-      },
-      "gas_usage": {
-        "name": "阶梯周期用气量",
-        "state": "阶梯周期用气量"
-      },
-      "meter_status": {
-        "name": "燃气表状态",
-        "state": "燃气表状态"
-      },
-      "last_reading": {
-        "name": "上次抄表读数",
-        "state": "上次抄表读数"
-      },
-      "last_recharge": {
-        "name": "最近充值金额",
-        "state": "最近充值金额"
-      },
-      "total_recharge": {
-        "name": "累计充值金额",
-        "state": "累计充值金额"
-      },
-      "billing_cycle": {
-        "name": "阶梯周期",
-        "state": "阶梯周期"
-      },
-      "auto_payment": {
-        "name": "自动扣费",
-        "state": "自动扣费"
-      },
-      "safety_inspection": {
-        "name": "安检状态",
-        "state": "安检状态"
-      },
-      "last_recharge_time": {
-        "name": "最近充值时间",
-        "state": "最近充值时间"
-      },
-      "user_name": {
-        "name": "用户名",
-        "state": "用户名"
-      },
-      "user_no": {
-        "name": "用户号",
-        "state": "用户号"
-      },
-      "address": {
-        "name": "地址",
-        "state": "地址"
-      },
-      "meter_no": {
-        "name": "表号",
-        "state": "表号"
-      },
-      "meter_type": {
-        "name": "表类型",
-        "state": "表类型"
-      },
-      "last_watch_date": {
-        "name": "上次抄表日期",
-        "state": "上次抄表日期"
-      }
+      "balance": {"name": "燃气表余额"},
+      "gas_usage": {"name": "阶梯周期用气量"},
+      "meter_status": {"name": "燃气表状态"},
+      "last_reading": {"name": "上次抄表读数"},
+      "last_recharge": {"name": "最近充值金额"},
+      "total_recharge": {"name": "累计充值金额"},
+      "billing_cycle": {"name": "阶梯周期"},
+      "auto_payment": {"name": "自动扣费方式"},
+      "safety_inspection": {"name": "安检状态"},
+      "last_recharge_time": {"name": "最近充值时间"},
+      "user_name": {"name": "账户姓名"},
+      "user_no": {"name": "燃气用户号"},
+      "address": {"name": "用气地址"},
+      "meter_no": {"name": "燃气表号"},
+      "meter_type": {"name": "燃气表类型"},
+      "last_watch_date": {"name": "上次抄表日期"},
+      "current_balance": {"name": "账户余额"},
+      "fee_flag": {"name": "欠费状态"},
+      "fee_money": {"name": "欠费金额"},
+      "safety_inspection_date": {"name": "安检日期"},
+      "start_fire_date": {"name": "点火日期"},
+      "company_name": {"name": "燃气公司"},
+      "payment_account": {"name": "扣费账号"},
+      "insurance_fee": {"name": "保险金额"},
+      "insurance_expire": {"name": "保险截止日期"},
+      "billing_cycle_start": {"name": "阶梯周期开始日期"},
+      "user_type": {"name": "用户类型"},
+      "insurance_type": {"name": "保险缴费类型"},
+      "insurance_invalid": {"name": "保险失效日期"},
+      "gas_address_status": {"name": "用气地址状态"},
+      "customer_id": {"name": "客户 ID"},
+      "current_usage_detail": {"name": "表具本期用气量"},
+      "meter_location": {"name": "燃气表安装位置"},
+      "meter_location_id": {"name": "表具位置 ID"},
+      "meter_id_detail": {"name": "表具 ID"},
+      "meter_serial": {"name": "表具编号"}
     }
   }
 }
